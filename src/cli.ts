@@ -21,6 +21,9 @@ async function init() {
       documentOptions: {
         password: opts.password,
       },
+      maxWidth: opts.maxWidth,
+      maxHeight: opts.maxHeight,
+      scaleForBrowserSupport: opts.scaleForBrowserSupport,
     });
 
     const pagesArray = getPagesArray(opts.pages, images.length);

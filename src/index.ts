@@ -53,7 +53,19 @@ async function pageToImg(
   opt: Required<Options>,
 ): Promise<string | Buffer> {
   const page = await pdfDoc.getPage(pageNum);
-  const viewport = page.getViewport({ scale: opt.scale });
+  let scale = opt.scale;
+  let viewport = page.getViewport({ scale });
+
+  if (opt.scaleForBrowserSupport || opt.maxWidth || opt.maxHeight) {
+    let { maxWidth, maxHeight } = opt;
+    maxWidth = maxWidth ?? 4096;
+    maxHeight = maxHeight ?? 4096;
+    const widthScale = maxWidth / viewport.width;
+    const heightScale = maxHeight / viewport.height;
+    const safeScale = Math.min(widthScale, heightScale, 1);
+    scale = scale * safeScale;
+    viewport = page.getViewport({ scale });
+  }
 
   const canvasFactory: any = pdfDoc.canvasFactory;
   const { canvas, context } = canvasFactory.create(

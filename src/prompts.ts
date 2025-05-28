@@ -6,10 +6,13 @@ import {
   validateImgType,
   validateInput,
   validateIntent,
+  validateMaxHeight,
+  validateMaxWidth,
   validateNameTemplate,
   validateOutput,
   validatePages,
   validateScale,
+  validateScaleForBrowserSupport,
 } from "./validators";
 
 export const program = new Command();
@@ -54,6 +57,21 @@ program
     "-b, --background <color>",
     "Background color (e.g., 'white', 'rgba(255,255,255,0.5)', '#ffffff')",
     "rgb(255,255,255)",
+  )
+  .option(
+    "-mw, --maxWidth <maxWidth>",
+    "Maximum width for the rendered canvas",
+    String(defaultOptions.maxWidth),
+  )
+  .option(
+    "-mh, --maxHeight <maxHeight>",
+    "Maximum height for the rendered canvas",
+    String(defaultOptions.maxHeight),
+  )
+  .option(
+    "-sb, --scaleForBrowserSupport <scaleForBrowserSupport>",
+    "Scale for browser support",
+    String(defaultOptions.scaleForBrowserSupport),
   );
 
 export interface CLIOptions {
@@ -66,6 +84,9 @@ export interface CLIOptions {
   password?: string;
   intent?: string;
   background?: string;
+  maxWidth?: string | number;
+  maxHeight?: string | number;
+  scaleForBrowserSupport?: string | boolean;
 }
 
 export function validatePrompts(opts: CLIOptions) {
@@ -77,6 +98,11 @@ export function validatePrompts(opts: CLIOptions) {
   const intent = validateIntent(opts.intent || "display");
   const background = validateBackground(opts.background || "rgb(255,255,255)");
   const nameTemplate = validateNameTemplate(inputPath, opts.name);
+  const maxWidth = validateMaxWidth(String(opts.maxWidth));
+  const maxHeight = validateMaxHeight(String(opts.maxHeight));
+  const scaleForBrowserSupport = validateScaleForBrowserSupport(
+    String(opts.scaleForBrowserSupport),
+  );
 
   return {
     inputPath,
@@ -88,5 +114,8 @@ export function validatePrompts(opts: CLIOptions) {
     password: opts.password,
     intent,
     background,
+    maxWidth,
+    maxHeight,
+    scaleForBrowserSupport,
   };
 }

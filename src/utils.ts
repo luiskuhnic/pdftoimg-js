@@ -7,6 +7,9 @@ export const defaultOptions: Required<Options> = {
   background: "rgb(255,255,255)",
   intent: "display",
   documentOptions: {},
+  maxWidth: null,
+  maxHeight: null,
+  scaleForBrowserSupport: false,
 };
 
 export const rangeToArr = (start: number, end?: number): number[] => {

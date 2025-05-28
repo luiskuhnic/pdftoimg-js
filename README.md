@@ -49,7 +49,13 @@ const fileInput = document.getElementById("pdfInput");
 
 fileInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
-  const images = await pdfToImg(URL.createObjectURL(file));
+  const images = await pdfToImg(URL.createObjectURL(file), {
+    maxWidth: 1000,
+    maxHeight: 1000,
+    // Set scaleForBrowserSupport: true to automatically scale to 4096x4096
+    // Setting maxWidth and maxHeight will override scaleForBrowserSupport
+    // scaleForBrowserSupport: true,
+  });
 
   images.forEach((imgSrc) => {
     const img = document.createElement("img");
@@ -85,6 +91,9 @@ interface Options {
   intent?: "display" | "print" | "any"; // Default: "display"
   pages?: PagesType; // "all" | "firstPage" | "lastPage" | number | number[] | { startPage, endPage }
   documentOptions?: DocumentInitParameters; // (Optional) More PDF.js config.
+  maxWidth?: number | null; // Default: null
+  maxHeight?: number | null; // Default: null
+  scaleForBrowserSupport?: boolean; // Default: false
 }
 ```
 
@@ -104,22 +113,25 @@ interface Options {
 Command-line support to batch convert PDFs easily!
 
 ```bash
-pdftoimg -i <input> [-o <output>] [-t <imgType>] [-s <scale>] [-p <pages>] [-n <template>] [-ps <password>] [-b <background>] [-in <intent>]
+pdftoimg -i <input> [-o <output>] [-t <imgType>] [-s <scale>] [-p <pages>] [-n <template>] [-ps <password>] [-b <background>] [-in <intent>] [-mw <maxWidth>] [-mh <maxHeight>] [-sb <scaleForBrowserSupport>]
 ```
 
 ### CLI Options
 
-| Option             | Type     | Description                                                                |
-| :----------------- | :------- | :------------------------------------------------------------------------- |
-| `-i, --input`      | `string` | (Required) Input PDF path.                                                 |
-| `-o, --out`        | `string` | Output directory (default: current directory).                             |
-| `-t, --imgType`    | `string` | `png` or `jpg` (default: png).                                             |
-| `-s, --scale`      | `number` | Scale factor (default: 1.5).                                               |
-| `-b, --background` | `string` | Background color (e.g., 'white', 'rgba(255,255,255,0.5)', '#ffffff').      |
-| `-in, --intent`    | `string` | Rendering intent: 'display', 'print', or 'any' (default: 'display').       |
-| `-p, --pages`      | `string` | `"all"`, `"firstPage"`, `"lastPage"`, page numbers, or ranges like `1..3`. |
-| `-n, --name`       | `string` | Filename template `{i}`, `{p}`, `{ext}`, `{f}` available.                  |
-| `-ps, --password`  | `string` | Password for the PDF file if encrypted.                                    |
+| Option                          | Type      | Description                                                                |
+| :------------------------------ | :-------- | :------------------------------------------------------------------------- |
+| `-i, --input`                   | `string`  | (Required) Input PDF path.                                                 |
+| `-o, --out`                     | `string`  | Output directory (default: current directory).                             |
+| `-t, --imgType`                 | `string`  | `png` or `jpg` (default: png).                                             |
+| `-s, --scale`                   | `number`  | Scale factor (default: 1.5).                                               |
+| `-b, --background`              | `string`  | Background color (e.g., 'white', 'rgba(255,255,255,0.5)', '#ffffff').      |
+| `-in, --intent`                 | `string`  | Rendering intent: 'display', 'print', or 'any' (default: 'display').       |
+| `-p, --pages`                   | `string`  | `"all"`, `"firstPage"`, `"lastPage"`, page numbers, or ranges like `1..3`. |
+| `-n, --name`                    | `string`  | Filename template `{i}`, `{p}`, `{ext}`, `{f}` available.                  |
+| `-ps, --password`               | `string`  | Password for the PDF file if encrypted.                                    |
+| `-mw, --maxWidth`               | `number`  | Maximum width for the rendered canvas.                                     |
+| `-mh, --maxHeight`              | `number`  | Maximum height for the rendered canvas.                                    |
+| `-sb, --scaleForBrowserSupport` | `boolean` | Scale for browser support.                                                 |
 
 ### ⚡ Example CLI Commands
 
@@ -151,6 +163,18 @@ Convert with transparent background:
 
 ```bash
 pdftoimg -i ./example.pdf -b "rgba(255,255,255,0)"
+```
+
+Convert with custom max width and height:
+
+```bash
+pdftoimg -i ./example.pdf -mw 1000 -mh 1000
+```
+
+Convert with scale for browser support:
+
+```bash
+pdftoimg -i ./example.pdf -sb true
 ```
 
 ## Contribution

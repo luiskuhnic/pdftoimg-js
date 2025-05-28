@@ -17,6 +17,10 @@ export function pdfToImg<O extends Options, S extends PdfSrc | PdfSrc[]>(
 export async function singlePdfToImg(src: PdfSrc, opt: Partial<Options> = {}) {
   const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
 
+  const ua = navigator.userAgent;
+  const isChrome =
+    ua.includes("chrome") || ua.includes("Chromium") || ua.includes("Chrome");
+
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     "//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.mjs";
 
@@ -24,6 +28,7 @@ export async function singlePdfToImg(src: PdfSrc, opt: Partial<Options> = {}) {
 
   const pdfDocLoading = pdfjsLib.getDocument({
     ...(isTypedArrayStrict(src) ? { data: src } : { url: src }),
+    isChrome,
     ...requiredOpt.documentOptions,
   });
 
@@ -50,7 +55,19 @@ async function pageToImg(
   opt: Required<Options>,
 ): Promise<string | Buffer> {
   const page = await pdfDoc.getPage(pageNum);
-  const viewport = page.getViewport({ scale: opt.scale });
+  let scale = opt.scale;
+  let viewport = page.getViewport({ scale });
+
+  if (opt.scaleForBrowserSupport || opt.maxWidth || opt.maxHeight) {
+    let { maxWidth, maxHeight } = opt;
+    maxWidth = maxWidth ?? 4096;
+    maxHeight = maxHeight ?? 4096;
+    const widthScale = maxWidth / viewport.width;
+    const heightScale = maxHeight / viewport.height;
+    const safeScale = Math.min(widthScale, heightScale, 1);
+    scale = scale * safeScale;
+    viewport = page.getViewport({ scale });
+  }
 
   const canvas = document.createElement("canvas");
 
