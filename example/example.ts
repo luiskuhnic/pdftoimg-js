@@ -23,6 +23,9 @@ async function runExample() {
       scale: 2,
       background: "white",
       intent: "print",
+      maxWidth: 1000,
+      maxHeight: 1000,
+      // scaleForBrowserSupport: true,
     });
 
     // Save images

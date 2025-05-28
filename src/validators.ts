@@ -103,3 +103,25 @@ export function validateBackground(value: string) {
   }
   return value;
 }
+
+export function validateMaxWidth(value: string) {
+  const parsed = parseFloat(value);
+  if (isNaN(parsed) || parsed <= 0) {
+    throw new Error("Max width must be a positive number.");
+  }
+  return parsed;
+}
+
+export function validateMaxHeight(value: string) {
+  const parsed = parseFloat(value);
+  if (isNaN(parsed) || parsed <= 0) {
+    throw new Error("Max height must be a positive number.");
+  }
+  return parsed;
+}
+
+export function validateScaleForBrowserSupport(value: string) {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  throw new Error("Scale for browser support must be a boolean.");
+}

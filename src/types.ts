@@ -48,6 +48,28 @@ export interface Options {
    * Additional document options.
    */
   documentOptions?: DocumentParams;
+
+  /**
+   * Maximum width (in pixels) for the rendered canvas.
+   * If the rendered canvas would exceed this, it will be downscaled proportionally.
+   * @default null
+   */
+  maxWidth?: number | null;
+
+  /**
+   * Maximum height (in pixels) for the rendered canvas.
+   * If the rendered canvas would exceed this, it will be downscaled proportionally.
+   * @default null
+   */
+  maxHeight?: number | null;
+
+  /**
+   * Automatically downscale large PDF pages to avoid browser canvas size limitations.
+   * Ensures consistent rendering across browsers like Safari with stricter limits.
+   * Uses default max dimensions of 4096x4096 pixels unless overridden by maxWidth/maxHeight.
+   * @default false
+   */
+  scaleForBrowserSupport?: boolean;
 }
 
 type PerSrcReturn<O extends Options> = O["pages"] extends
