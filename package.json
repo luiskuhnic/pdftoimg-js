@@ -8,12 +8,13 @@
   },
   "dependencies": {
     "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.0.1",
     "pdftoimg-js": "git+https://github.com/luiskuhnic/pdftoimg-js.git"
   },
   "engines": {
     "node": ">=16.0.0"
   }
 }
+
 
 
