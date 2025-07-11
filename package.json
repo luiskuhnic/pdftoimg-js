@@ -2,12 +2,12 @@
   "name": "pdf-to-jpg-service",
   "version": "1.0.0",
   "description": "API en Node.js que convierte PDFs en JPG usando pdftoimg-js",
-  "main": "index.js",                // ← apunta a tu servidor
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js"         // ← comando para npm start
+    "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.19.2",            
+    "express": "^4.19.2",
     "multer": "^1.4.5",
     "pdftoimg-js": "git+https://github.com/luiskuhnic/pdftoimg-js.git"
   },
@@ -15,4 +15,5 @@
     "node": ">=16.0.0"
   }
 }
+
 
